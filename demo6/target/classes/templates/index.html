@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Bootstrap 实例 - 条纹表格</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<form method="post" th:action="@{/add}" id="tableData">
+<table class="table table-striped">
+
+    <thead>
+
+    <tr>
+        <td>id</td>
+        <td>姓名</td>
+        <td>密码</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${page.list}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.pwd}"></td>
+    </tr>
+    </tbody>
+</table>
+</form>
+
+
+        <table class="table" width="425px">
+            <tbody>
+            <tr align="center">
+                <td>
+                    <a th:href="@{/all/(pageNum=${page.pageNum} - 1)}"  class="ui button basic mini" th:unless="${page.isFirstPage}">上一页</a>
+                </td>
+                <td>
+                    第
+                    <h8 th:text="${page.pageNum}">2</h8>
+                    页/共
+                    <h8 th:text="${page.pages}">4</h8>
+                    页
+                    共
+                    <h8 th:text="${page.total}">29</h8>
+                    条
+                </td>
+                <td>
+                    <form name="pageForm" th:action="@{/all}" method="get">
+                        <div class="ui mini input ">
+                            <input type="text" class="m-bg" name="pageNum" placeholder="页码" style="width: 50px!important; height: 27.76px!important;" required>
+                            <button type="submit" style="font-size: 11px!important;width: 30px!important; height: 0px!important; border: none;margin: 5px;padding: 0;" class="button mini">
+                                跳转
+                            </button>
+                        </div>
+                    </form>
+                </td>
+                <td> &nbsp;</td>
+                <td  style="float: right">
+                    <a th:href="@{/all/(pageNum=${page.pageNum} + 1)}" class="ui button basic mini " style="float: right;" th:unless="${page.isLastPage}">下一页</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+<!--    <tr>-->
+<!--        <td th:text="'one.id: '+${one.id}"></td>-->
+<!--        <td th:text="'one.pwd: '+${one.pwd}"></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td th:text="'two.id: '+${two.id}"></td>-->
+<!--        <td th:text="'two.name: '+${two.name}"></td>-->
+<!--    </tr>-->
+    <form action="/upload" method="post" enctype="multipart/form-data" class="form-inline" role="form">
+        <div class="form-group">
+            <input type="file" name="fileUpload" >
+        </div>
+        <div class="form-group">
+            <input type="submit" value="上传">
+        </div>
+    </form>
+
+
+<div>
+<!--    <form method="post" th:action="@{/add}" >-->
+<!--        id:<input type="text" name="id"><br>-->
+<!--        pwd:<input type="text" name="pwd"><br>-->
+<!--        name:<input type="text" name="name"><br>-->
+<!--        <input type="submit" value="添加">-->
+<!--    </form>-->
+    <table>
+<!--        <tr th:if="add">-->
+<!--            <td th:text="${add.name}"></td>-->
+<!--            <td th:text="${add.pwd}"></td>-->
+<!--            <td th:text="${add.id}"></td>-->
+<!--        </tr>-->
+    </table>
+</div>
+<button onclick="myPost()"type="button" class="btn btn-success btn-primary btn-lg text-center">DownLoad--Table</button>
+<!--<div class="ui success  message" th:unless="${#strings.isEmpty(message)}">-->
+<!--    <i class="close icon"></i>-->
+<!--    <div class="header">提示：</div>-->
+<!--    <p th:text="${message}"></p>-->
+<!--</div>-->
+</body>
+<script>
+    //导出excel
+    function getData(){
+
+        var getData = document.getElementById("tableData").getElementsByTagName("tr");
+        var title=getData[0].getElementsByTagName("td");
+        var json="";
+        for(var i=0;i<getData.length;i++){
+            var tds = getData[i].getElementsByTagName("td");
+            json += "{";
+            for(var j = 0; j < tds.length; j++){
+                json += "\""+title[j].innerText+"\"" + ":" + "\""+tds[j].innerText +"\""+ ",";
+            }
+            json = json.substring(0, json.length - 1) + "},";
+        }
+        json = "[" + json.substring(0, json.length - 1) + "]";
+
+        return json;
+
+    }
+    function myPost(){
+        var postData=getData();
+        $.ajax({
+            type:"post",
+            url:"/download",
+            data:{
+                name:postData
+            },
+            success:function (data,status){
+                console.log(data);
+                console.log(status);
+            }
+
+        });
+        console.log("方法被调用");
+    }
+</script>
+</html>

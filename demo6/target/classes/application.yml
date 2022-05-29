@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: demo6
+  thymeleaf:
+    cache: true
+    check-template: true
+    check-template-location: true
+    servlet:
+      content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    excluded-view-names:
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf-8&serverTimezone=GMT
+    username: a1002214553
+    password: 2230193718
+server:
+  port: 8080
+mybatis:
+  type-aliases-package: com/example/demo/pojo   #   别名
+  mapper-locations: classpath:/mybatis/*.xml   #   xml文件
